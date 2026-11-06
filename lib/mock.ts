@@ -230,11 +230,35 @@ export function mockQuiz(chapter: string, count: number = 5) {
   ];
   // Fix q2 correctIndex
   base[1].correctIndex = 0;
-  const selected = base.slice(0, count);
-  if (chapter) {
-    selected.forEach((q) => (q.subtopic = chapter));
+  // Unlimited generation: if count > base.length, cycle and vary numbers
+  if (count <= base.length) {
+    const selected = base.slice(0, count);
+    if (chapter) selected.forEach((q) => (q.subtopic = chapter));
+    return { questions: selected };
   }
-  return { questions: selected };
+  const extended: any[] = [];
+  let seed = chapter ? chapter.length : 7;
+  for (let i = 0; i < count; i++) {
+    const template = base[i % base.length];
+    const clone = JSON.parse(JSON.stringify(template));
+    clone.id = `q${i+1}`;
+    if (chapter) clone.subtopic = chapter;
+    // vary numbers slightly for variety
+    if (clone.type === "mcq" && clone.question.includes("$")) {
+      // tweak numbers in question by seed
+      const u = 15 + (seed * 3 + i * 7) % 25;
+      clone.question = clone.question.replace(/20\\,\\text\{m\/s\}/, `${u}\\,\\text{m/s}`).replace(/60\\,\\circ/, `${(30 + (i*11)%40)}\\,\\circ`);
+    }
+    if (clone.type === "numerical") {
+      const baseVal = parseFloat(clone.correctValue) || 10;
+      const jitter = ((i * 13) % 7) - 3;
+      clone.correctValue = (baseVal + jitter * 0.7).toFixed(2);
+    }
+    clone.difficulty = (["Easy","Medium","Hard"] as const)[i % 3];
+    extended.push(clone);
+    seed += 1;
+  }
+  return { questions: extended };
 }
 
 export function mockVisionResponse() {

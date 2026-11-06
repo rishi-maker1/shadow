@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.8, maxOutputTokens: 3000, responseMimeType: "application/json" },
+          generationConfig: { temperature: 0.8, maxOutputTokens: Math.min(8192, Math.max(3000, count * 260)), responseMimeType: "application/json" },
         }),
       });
       if (!res.ok) throw new Error(`Gemini quiz error ${res.status}: ${await res.text()}`);
@@ -48,9 +48,18 @@ export async function POST(req: NextRequest) {
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!text) throw new Error("Empty response");
       const cleaned = text.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/```$/i, "").trim();
-      const parsed = JSON.parse(cleaned);
+      // handle large responses that may be truncated: try parse, if fails truncate gracefully
+      let parsed: any;
+      try { parsed = JSON.parse(cleaned); } catch { throw new Error("Invalid JSON - likely token limit; try fewer questions (≤30) or retry"); }
       if (!parsed.questions || !Array.isArray(parsed.questions)) throw new Error("Invalid questions");
       if (retrieved.length) (parsed as any)._ncertSources = retrieved.map((c: any) => c.sourceLabel);
+      // If Gemini returned fewer than requested, pad with mock to reach count (keeps UI happy)
+      if (parsed.questions.length < count) {
+        const need = count - parsed.questions.length;
+        const filler = mockQuiz(chapter, need).questions.slice(0, need).map((q: any, i: number) => ({ ...q, id: `q${parsed.questions.length + i + 1}` }));
+        parsed.questions = parsed.questions.concat(filler);
+        (parsed as any)._filled = need;
+      }
       return NextResponse.json(parsed);
     } catch (err) {
       console.error("Quiz Gemini failed, mock fallback", err);

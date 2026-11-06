@@ -159,10 +159,12 @@ function PracticeInner() {
               <label className="text-sm">
                 <span className="font-semibold text-slate-700">Exam</span>
                 <select value={exam} onChange={(e) => setExam(e.target.value)} className="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50">
-                  <option value="JEE">JEE</option>
-                  <option value="NEET">NEET</option>
+                  <option value="JEE">JEE (11+12)</option>
+                  <option value="NEET">NEET (11+12)</option>
+                  <option value="CLASS11">Class 11</option>
+                  <option value="CLASS12">Class 12</option>
                   <option value="CBSE10">CBSE 10</option>
-                  <option value="CBSE12">CBSE 12</option>
+                  <option value="CBSE12">CBSE 12 — Boards</option>
                 </select>
               </label>
               <label className="text-sm sm:col-span-2">
@@ -176,16 +178,17 @@ function PracticeInner() {
                 </div>
               </label>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <span className="text-sm font-semibold">Questions:</span>
-              {[5, 10, 15].map((n) => (
+              {[5, 10, 15, 30, 50].map((n) => (
                 <button key={n} onClick={() => setCount(n)} className={`px-4 py-2 rounded-full text-sm font-bold border ${count === n ? "bg-slate-900 text-white border-slate-900" : "bg-white border-slate-200"}`}>{n}</button>
               ))}
+              <input type="number" min={1} max={100} value={count} onChange={(e) => setCount(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))} className="w-20 px-2 py-2 rounded-full border border-slate-200 text-sm font-bold text-center" title="Custom (1-100)" />
               <button onClick={generate} disabled={loading || !chapter.trim()} className="ml-auto px-8 py-3 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold flex items-center gap-2 shadow hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50">
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} Generate Test
               </button>
             </div>
-            <p className="text-xs text-slate-500">Tip: You can also type any custom topic like “Organic Conversion - CBSE” — AI will generate relevant questions.</p>
+            <p className="text-xs text-slate-500">Full internet • Uses GEMINI_API_KEY from your <code className="px-1.5 py-0.5 bg-slate-100 rounded border">.env</code> file (no limit). Without a key → smart local mocks (also unlimited, just not AI). Custom topic works for any chapter.</p>
           </div>
         )}
 

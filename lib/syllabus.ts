@@ -1,4 +1,4 @@
-export type Exam = "JEE" | "NEET" | "CBSE10" | "CBSE12";
+export type Exam = "JEE" | "NEET" | "CBSE10" | "CBSE12" | "CLASS11" | "CLASS12";
 export type Subject = string;
 
 export interface Subtopic {
@@ -565,11 +565,134 @@ export const SYLLABUS: SyllabusDB = {
       ],
     },
   ],
+  CLASS11: [
+    {
+      subject: "Physics",
+      icon: "⚛️",
+      color: "#0ea5e9",
+      chapters: [
+        { id: "c11-phy-01", name: "Physical World & Units and Measurements", subtopics: [{ id: "c11-phy-01-01", name: "Dimensional Analysis & Errors", status: "completed", difficulty: "Easy" }, { id: "c11-phy-01-02", name: "Vernier & Screw Gauge", status: "in-progress", difficulty: "Easy" }] },
+        { id: "c11-phy-02", name: "Motion in a Straight Line", subtopics: [{ id: "c11-phy-02-01", name: "Distance, Velocity, Acceleration", status: "in-progress", difficulty: "Medium" }, { id: "c11-phy-02-02", name: "Equations & Graphs", status: "weak", difficulty: "Medium" }] },
+        { id: "c11-phy-03", name: "Motion in a Plane", subtopics: [{ id: "c11-phy-03-01", name: "Vectors & Resolution", status: "weak", difficulty: "Medium" }, { id: "c11-phy-03-02", name: "Projectile & Circular Motion", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-phy-04", name: "Laws of Motion", subtopics: [{ id: "c11-phy-04-01", name: "Inertia & Newton Laws", status: "completed", difficulty: "Medium" }, { id: "c11-phy-04-02", name: "Friction & Banking", status: "weak", difficulty: "Medium" }] },
+        { id: "c11-phy-05", name: "Work, Energy and Power", subtopics: [{ id: "c11-phy-05-01", name: "Work-Energy Theorem", status: "in-progress", difficulty: "Medium" }, { id: "c11-phy-05-02", name: "Collisions", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-phy-06", name: "System of Particles & Rotational Motion", subtopics: [{ id: "c11-phy-06-01", name: "Centre of Mass & Moment of Inertia", status: "not-started", difficulty: "Hard" }, { id: "c11-phy-06-02", name: "Angular Momentum & Rolling", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-phy-07", name: "Gravitation", subtopics: [{ id: "c11-phy-07-01", name: "Kepler & Orbital Velocity", status: "completed", difficulty: "Medium" }, { id: "c11-phy-07-02", name: "Potential & Energy", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c11-phy-08", name: "Mechanical Properties of Solids & Fluids", subtopics: [{ id: "c11-phy-08-01", name: "Stress-Strain & Bernoulli", status: "not-started", difficulty: "Medium" }, { id: "c11-phy-08-02", name: "Surface Tension & Viscosity", status: "not-started", difficulty: "Medium" }] },
+        { id: "c11-phy-09", name: "Thermal Properties & Thermodynamics", subtopics: [{ id: "c11-phy-09-01", name: "Heat Transfer & Kinetic Theory", status: "weak", difficulty: "Medium" }, { id: "c11-phy-09-02", name: "First & Second Law", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-phy-10", name: "Oscillations & Waves", subtopics: [{ id: "c11-phy-10-01", name: "SHM & Pendulum", status: "not-started", difficulty: "Hard" }, { id: "c11-phy-10-02", name: "Wave Equation & Doppler", status: "not-started", difficulty: "Hard" }] },
+      ],
+    },
+    {
+      subject: "Chemistry",
+      icon: "🧪",
+      color: "#10b981",
+      chapters: [
+        { id: "c11-che-01", name: "Some Basic Concepts of Chemistry", subtopics: [{ id: "c11-che-01-01", name: "Mole Concept & Stoichiometry", status: "completed", difficulty: "Easy" }, { id: "c11-che-01-02", name: "Limiting Reagent & Concentration", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c11-che-02", name: "Structure of Atom", subtopics: [{ id: "c11-che-02-01", name: "Quantum Numbers & Electronic Configuration", status: "weak", difficulty: "Medium" }, { id: "c11-che-02-02", name: "Shapes of Orbitals", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-che-03", name: "Classification of Elements - Periodic Table", subtopics: [{ id: "c11-che-03-01", name: "Periodic Trends & Anomalies", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c11-che-04", name: "Chemical Bonding & Molecular Structure", subtopics: [{ id: "c11-che-04-01", name: "Lewis, VSEPR, Hybridisation", status: "weak", difficulty: "Hard" }, { id: "c11-che-04-02", name: "MO Theory", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-che-05", name: "States of Matter (Gases, Liquids)", subtopics: [{ id: "c11-che-05-01", name: "Gas Laws & Ideal Gas Equation", status: "completed", difficulty: "Medium" }] },
+        { id: "c11-che-06", name: "Thermodynamics (Chem)", subtopics: [{ id: "c11-che-06-01", name: "Enthalpy, Entropy, Gibbs", status: "in-progress", difficulty: "Hard" }] },
+        { id: "c11-che-07", name: "Equilibrium", subtopics: [{ id: "c11-che-07-01", name: "Chemical & Ionic Equilibrium", status: "weak", difficulty: "Hard" }, { id: "c11-che-07-02", name: "pH, Buffer, Solubility", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-che-08", name: "Redox Reactions", subtopics: [{ id: "c11-che-08-01", name: "Oxidation Number & Balancing", status: "completed", difficulty: "Medium" }] },
+        { id: "c11-che-09", name: "Hydrogen & s/p/d/f Block", subtopics: [{ id: "c11-che-09-01", name: "s-block & Hydrogen", status: "not-started", difficulty: "Medium" }, { id: "c11-che-09-02", name: "p-Block Elements", status: "not-started", difficulty: "Medium" }] },
+        { id: "c11-che-10", name: "Organic Chemistry Basics + Hydrocarbons", subtopics: [{ id: "c11-che-10-01", name: "IUPAC, GOC, Isomerism", status: "weak", difficulty: "Hard" }, { id: "c11-che-10-02", name: "Alkanes, Alkenes, Alkynes, Benzene", status: "not-started", difficulty: "Hard" }] },
+      ],
+    },
+    {
+      subject: "Biology",
+      icon: "🧬",
+      color: "#ec4899",
+      chapters: [
+        { id: "c11-bio-01", name: "Diversity in Living World", subtopics: [{ id: "c11-bio-01-01", name: "The Living World & Biological Classification", status: "completed", difficulty: "Easy" }, { id: "c11-bio-01-02", name: "Plant & Animal Kingdom", status: "in-progress", difficulty: "Easy" }] },
+        { id: "c11-bio-02", name: "Structural Organisation", subtopics: [{ id: "c11-bio-02-01", name: "Morphology of Flowering Plants", status: "weak", difficulty: "Medium" }, { id: "c11-bio-02-02", name: "Anatomy & Animal Tissues", status: "not-started", difficulty: "Medium" }] },
+        { id: "c11-bio-03", name: "Cell Structure & Function", subtopics: [{ id: "c11-bio-03-01", name: "Cell - Unit of Life & Biomolecules", status: "completed", difficulty: "Medium" }, { id: "c11-bio-03-02", name: "Cell Cycle & Division", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c11-bio-04", name: "Plant Physiology", subtopics: [{ id: "c11-bio-04-01", name: "Photosynthesis & Respiration", status: "weak", difficulty: "Hard" }, { id: "c11-bio-04-02", name: "Plant Growth & PGR", status: "not-started", difficulty: "Easy" }] },
+        { id: "c11-bio-05", name: "Human Physiology", subtopics: [{ id: "c11-bio-05-01", name: "Breathing, Circulation & Excretion", status: "in-progress", difficulty: "Medium" }, { id: "c11-bio-05-02", name: "Locomotion, Neural & Chemical Coordination", status: "not-started", difficulty: "Hard" }] },
+      ],
+    },
+    {
+      subject: "Mathematics",
+      icon: "📐",
+      color: "#f59e0b",
+      chapters: [
+        { id: "c11-mat-01", name: "Sets, Relations & Functions", subtopics: [{ id: "c11-mat-01-01", name: "Sets & Functions - Domain/Range", status: "completed", difficulty: "Easy" }, { id: "c11-mat-01-02", name: "Trigonometric Functions", status: "weak", difficulty: "Medium" }] },
+        { id: "c11-mat-02", name: "Complex Numbers, Quadratic & Linear Inequalities", subtopics: [{ id: "c11-mat-02-01", name: "Complex Plane & Quadratic Roots", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c11-mat-03", name: "Permutations, Combinations & Binomial Theorem", subtopics: [{ id: "c11-mat-03-01", name: "PC & Binomial Expansion", status: "weak", difficulty: "Medium" }] },
+        { id: "c11-mat-04", name: "Sequences & Series", subtopics: [{ id: "c11-mat-04-01", name: "AP, GP, HP & Sum to n terms", status: "completed", difficulty: "Medium" }] },
+        { id: "c11-mat-05", name: "Straight Lines & Conic Sections", subtopics: [{ id: "c11-mat-05-01", name: "Lines, Circles", status: "in-progress", difficulty: "Medium" }, { id: "c11-mat-05-02", name: "Parabola, Ellipse, Hyperbola", status: "not-started", difficulty: "Hard" }] },
+        { id: "c11-mat-06", name: "3D, Limits, Derivatives & Reasoning", subtopics: [{ id: "c11-mat-06-01", name: "3D Geometry", status: "not-started", difficulty: "Medium" }, { id: "c11-mat-06-02", name: "Limits & Derivatives", status: "weak", difficulty: "Hard" }] },
+        { id: "c11-mat-07", name: "Statistics & Probability", subtopics: [{ id: "c11-mat-07-01", name: "Mean, Variance & Probability", status: "not-started", difficulty: "Medium" }] },
+      ],
+    },
+  ],
+  CLASS12: [
+    {
+      subject: "Physics",
+      icon: "⚛️",
+      color: "#0ea5e9",
+      chapters: [
+        { id: "c12-phy-01", name: "Electric Charges & Fields", subtopics: [{ id: "c12-phy-01-01", name: "Coulomb's Law & Electric Field", status: "completed", difficulty: "Medium" }, { id: "c12-phy-01-02", name: "Gauss's Law & Applications", status: "weak", difficulty: "Hard" }] },
+        { id: "c12-phy-02", name: "Electrostatic Potential & Capacitance", subtopics: [{ id: "c12-phy-02-01", name: "Potential, Equipotentials & Capacitors", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c12-phy-03", name: "Current Electricity", subtopics: [{ id: "c12-phy-03-01", name: "Drift, Ohm's Law, Kirchhoff & Potentiometer", status: "completed", difficulty: "Medium" }] },
+        { id: "c12-phy-04", name: "Moving Charges & Magnetism", subtopics: [{ id: "c12-phy-04-01", name: "Biot-Savart, Ampere & Cyclotron", status: "weak", difficulty: "Hard" }] },
+        { id: "c12-phy-05", name: "Magnetism & Matter + EMI + AC", subtopics: [{ id: "c12-phy-05-01", name: "Earth's Magnetism", status: "in-progress", difficulty: "Easy" }, { id: "c12-phy-05-02", name: "EMI, Inductance & AC Circuits", status: "not-started", difficulty: "Hard" }] },
+        { id: "c12-phy-06", name: "Electromagnetic Waves", subtopics: [{ id: "c12-phy-06-01", name: "Displacement Current & EM Spectrum", status: "completed", difficulty: "Easy" }] },
+        { id: "c12-phy-07", name: "Ray Optics & Optical Instruments", subtopics: [{ id: "c12-phy-07-01", name: "Mirrors, Lenses, Prism & Microscope", status: "weak", difficulty: "Medium" }] },
+        { id: "c12-phy-08", name: "Wave Optics", subtopics: [{ id: "c12-phy-08-01", name: "Interference, Young, Diffraction & Polarisation", status: "not-started", difficulty: "Hard" }] },
+        { id: "c12-phy-09", name: "Dual Nature & Atoms", subtopics: [{ id: "c12-phy-09-01", name: "Photoelectric & Bohr Model", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c12-phy-10", name: "Nuclei, Semiconductors & Communication", subtopics: [{ id: "c12-phy-10-01", name: "Radioactivity & Binding Energy", status: "weak", difficulty: "Medium" }, { id: "c12-phy-10-02", name: "Semiconductors, Diodes & Logic Gates", status: "not-started", difficulty: "Medium" }] },
+      ],
+    },
+    {
+      subject: "Chemistry",
+      icon: "🧪",
+      color: "#10b981",
+      chapters: [
+        { id: "c12-che-01", name: "The Solid State & Solutions", subtopics: [{ id: "c12-che-01-01", name: "Crystal Lattices & Colligative Properties", status: "completed", difficulty: "Medium" }] },
+        { id: "c12-che-02", name: "Electrochemistry", subtopics: [{ id: "c12-che-02-01", name: "Conductance, Galvanic Cells & Nernst", status: "weak", difficulty: "Hard" }] },
+        { id: "c12-che-03", name: "Chemical Kinetics", subtopics: [{ id: "c12-che-03-01", name: "Rate Laws, Order & Arrhenius", status: "in-progress", difficulty: "Medium" }] },
+        { id: "c12-che-04", name: "Surface Chemistry & General Principles of Isolation", subtopics: [{ id: "c12-che-04-01", name: "Colloids, Adsorption & Metallurgy", status: "not-started", difficulty: "Easy" }] },
+        { id: "c12-che-05", name: "p, d, f Block Elements", subtopics: [{ id: "c12-che-05-01", name: "p-Block & d-Block Properties", status: "weak", difficulty: "Medium" }, { id: "c12-che-05-02", name: "Coordination Compounds - CFT & Isomerism", status: "not-started", difficulty: "Hard" }] },
+        { id: "c12-che-06", name: "Haloalkanes, Alcohols, Phenols, Ethers & Aldehydes/Ketones/Acids", subtopics: [{ id: "c12-che-06-01", name: "Haloalkanes to Alcohols Mechanism", status: "in-progress", difficulty: "Hard" }, { id: "c12-che-06-02", name: "Carbonyl & Carboxylic Chemistry", status: "weak", difficulty: "Hard" }] },
+        { id: "c12-che-07", name: "Amines & Biomolecules + Polymers", subtopics: [{ id: "c12-che-07-01", name: "Amines & Diazonium", status: "not-started", difficulty: "Medium" }, { id: "c12-che-07-02", name: "Biomolecules, Polymers & Chemistry in Everyday Life", status: "not-started", difficulty: "Easy" }] },
+      ],
+    },
+    {
+      subject: "Biology",
+      icon: "🧬",
+      color: "#ec4899",
+      chapters: [
+        { id: "c12-bio-01", name: "Reproduction", subtopics: [{ id: "c12-bio-01-01", name: "Reproduction in Organisms & Flowering Plants", status: "completed", difficulty: "Medium" }, { id: "c12-bio-01-02", name: "Human Reproduction & Reproductive Health", status: "weak", difficulty: "Medium" }] },
+        { id: "c12-bio-02", name: "Genetics & Evolution", subtopics: [{ id: "c12-bio-02-01", name: "Inheritance & Molecular Basis", status: "in-progress", difficulty: "Hard" }, { id: "c12-bio-02-02", name: "Evolution & Evidence", status: "not-started", difficulty: "Medium" }] },
+        { id: "c12-bio-03", name: "Biology & Human Welfare", subtopics: [{ id: "c12-bio-03-01", name: "Health, Microbes, Immunology", status: "weak", difficulty: "Medium" }] },
+        { id: "c12-bio-04", name: "Biotechnology", subtopics: [{ id: "c12-bio-04-01", name: "Principles, Tools & Applications", status: "in-progress", difficulty: "Hard" }] },
+        { id: "c12-bio-05", name: "Ecology", subtopics: [{ id: "c12-bio-05-01", name: "Organisms, Populations, Ecosystem & Biodiversity", status: "completed", difficulty: "Easy" }] },
+      ],
+    },
+    {
+      subject: "Mathematics",
+      icon: "📐",
+      color: "#f59e0b",
+      chapters: [
+        { id: "c12-mat-01", name: "Relations & Functions + Inverse Trigonometry", subtopics: [{ id: "c12-mat-01-01", name: "Types of Relations & ITF", status: "completed", difficulty: "Medium" }] },
+        { id: "c12-mat-02", name: "Matrices & Determinants", subtopics: [{ id: "c12-mat-02-01", name: "Operations & Properties", status: "weak", difficulty: "Medium" }] },
+        { id: "c12-mat-03", name: "Continuity & Differentiability", subtopics: [{ id: "c12-mat-03-01", name: "Continuity, Differentiability & Chain Rule", status: "in-progress", difficulty: "Hard" }] },
+        { id: "c12-mat-04", name: "Applications of Derivatives", subtopics: [{ id: "c12-mat-04-01", name: "Tangents, Maxima/Minima & Rate", status: "weak", difficulty: "Hard" }] },
+        { id: "c12-mat-05", name: "Integrals", subtopics: [{ id: "c12-mat-05-01", name: "Indefinite & Definite + Properties", status: "in-progress", difficulty: "Hard" }, { id: "c12-mat-05-02", name: "Area Under Curve", status: "not-started", difficulty: "Hard" }] },
+        { id: "c12-mat-06", name: "Differential Equations", subtopics: [{ id: "c12-mat-06-01", name: "Order, Degree & Formation/Solution", status: "not-started", difficulty: "Hard" }] },
+        { id: "c12-mat-07", name: "Vectors & 3D Geometry + Linear Programming + Probability", subtopics: [{ id: "c12-mat-07-01", name: "Vector & 3D", status: "weak", difficulty: "Hard" }, { id: "c12-mat-07-02", name: "LPP & Probability - Bayes & Binomial", status: "not-started", difficulty: "Medium" }] },
+      ],
+    },
+  ],
 };
 
 export const EXAM_META = {
-  JEE: { label: "JEE Main & Advanced", desc: "Physics • Chemistry • Mathematics", color: "from-indigo-600 to-violet-600", students: "12.5L+" },
-  NEET: { label: "NEET UG", desc: "Physics • Chemistry • Biology", color: "from-emerald-600 to-teal-600", students: "20L+" },
+  JEE: { label: "JEE Main & Advanced", desc: "Physics • Chemistry • Mathematics · Full 11+12", color: "from-indigo-600 to-violet-600", students: "12.5L+" },
+  NEET: { label: "NEET UG", desc: "Physics • Chemistry • Biology · Full 11+12", color: "from-emerald-600 to-teal-600", students: "20L+" },
   CBSE10: { label: "CBSE Class 10", desc: "Science • Maths • SST", color: "from-amber-600 to-orange-600", students: "22L+" },
-  CBSE12: { label: "CBSE Class 12", desc: "Physics • Chemistry • Maths • Biology", color: "from-pink-600 to-rose-600", students: "16L+" },
+  CBSE12: { label: "CBSE Class 12 — Boards", desc: "Physics • Chemistry • Maths • Biology", color: "from-pink-600 to-rose-600", students: "16L+" },
+  CLASS11: { label: "Class 11 — Foundation", desc: "Physics • Chemistry • Biology • Maths · Full NCERT", color: "from-sky-600 to-cyan-600", students: "Full Syllabus" },
+  CLASS12: { label: "Class 12 — Foundation", desc: "Physics • Chemistry • Biology • Maths · Full NCERT", color: "from-fuchsia-600 to-purple-600", students: "Full Syllabus" },
 } as const;
