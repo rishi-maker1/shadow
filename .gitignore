@@ -35,6 +35,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# study materials (local personal notes - not committed by default; commit data/materials.json only if you want to share)
+data/
+!.gitkeep
+
 # IDE
 .vscode
 .idea
