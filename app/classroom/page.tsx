@@ -4,7 +4,27 @@ import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import VirtualBoard from "@/components/VirtualBoard";
 import { getApiKeys, getSelectedExam } from "@/lib/storage";
-import { Mic, MicOff, Send, Image as ImageIcon, Volume2, VolumeX, Trash2, Languages, Sun, Moon, BookOpen, Sparkles, MessageCircle, Lightbulb, RotateCcw, Upload, X, Loader2, Settings2, Play } from "lucide-react";
+import { Mic, MicOff, Send, Image as ImageIcon, Volume2, VolumeX, Trash2, Languages, Sun, Moon, BookOpen, Sparkles, MessageCircle, Lightbulb, RotateCcw, Upload, X, Loader2, Settings2, Play, Zap } from "lucide-react";
+
+function LiveBanner() {
+  const [hasKey, setHasKey] = useState(false);
+  const [checked, setChecked] = useState(false);
+  useEffect(() => {
+    try { const k = getApiKeys(); setHasKey(!!(k.gemini && k.gemini.length > 10)); } catch {}
+    setChecked(true);
+  }, []);
+  if (!checked) return null;
+  return (
+    <div className="max-w-[1600px] w-full mx-auto px-3 sm:px-4 lg:px-6 pt-4">
+      <div className={`flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-xl border text-xs sm:text-sm ${hasKey ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-amber-50 border-amber-200 text-amber-900"}`}>
+        <span className="flex items-center gap-2 font-semibold">
+          {hasKey ? <><Zap className="w-4 h-4 text-emerald-600" /> LIVE AI — Gemini connected. Board, voice & questions are generated live for your topic (not pre-recorded).</> : <><Sparkles className="w-4 h-4 text-amber-600" /> DEMO MOCK — No API key. You’re seeing mock board (same 5 templates). Add GEMINI_API_KEY to go fully live.</>}
+        </span>
+        {!hasKey && <span className="text-amber-800">Add key in <code className="px-1 py-0.5 bg-white border rounded">.env</code> or <span className="px-2 py-0.5 rounded-full bg-slate-900 text-white font-bold">⚙️ Settings</span></span>}
+      </div>
+    </div>
+  );
+}
 
 type Language = "English" | "Hindi" | "Hinglish";
 
@@ -201,6 +221,8 @@ function ClassroomInner() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
+      {/* Live vs Demo hint — same as Dashboard fix */}
+      <LiveBanner />
       <div className="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 flex flex-col gap-4">
         {/* Top controls bar */}
         <div className="bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 flex flex-wrap items-center gap-3 shadow-sm">
