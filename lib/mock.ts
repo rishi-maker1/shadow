@@ -1,6 +1,106 @@
 export function mockTutorResponse(topic: string, language: string) {
   const isHinglish = language === "Hinglish";
   const isHindi = language === "Hindi";
+  const tLower = (topic || "").toLowerCase();
+
+  // helper to pick simulation based on topic
+  function pickSim(topic: string) {
+    const l = topic.toLowerCase();
+    if (l.includes("pendulum") || l.includes("shm") || l.includes("simple harmonic") || l.includes("oscillation")) return { type: "pendulum", params: { length: 1.1, angle: 28, damping: 0.02 } };
+    if (l.includes("ray") || l.includes("optics") || l.includes("lens") || l.includes("mirror")) return { type: "ray_optics", params: { focalLength: 12, objectDistance: 26, lensType: "convex", objectHeight: 16 } };
+    if (l.includes("gas") || l.includes("ideal") || l.includes("thermodynamics") || l.includes("pvt") || l.includes("isothermal")) return { type: "ideal_gas", params: { n: 1.2, T: 320, P: 1.6 } };
+    if (l.includes("equilibrium") || l.includes("chemical") || l.includes("kc") || l.includes("le chatelier") || l.includes("haber's") || l.includes("haber")) return { type: "equilibrium", params: { concN2: 1.0, concH2: 1.4, concNH3: 0.7, Kc: 0.85, temp: 480 } };
+    if (l.includes("projectile") || l.includes("kinematics") || l.includes("motion")) return { type: "projectile", params: { u: 22, theta: 42 } };
+    if (l.includes("wave")) return { type: "pendulum", params: { length: 0.9, angle: 18 } };
+    return { type: "projectile", params: { u: 20, theta: 45 } };
+  }
+  const chosenSim = pickSim(topic || "");
+
+  // specialized scripts per sim type for richer demo when topic matches
+  if (tLower.includes("pendulum") || tLower.includes("shm") || tLower.includes("oscillation")) {
+    return {
+      board_title: `${topic || "Simple Pendulum"} — SHM in Action!`,
+      board_blocks: [
+        { type: "concept", content: isHinglish ? `**Dekho ${topic}** — ek simple pendulum SHM ka sabse clean example hai. Small angles pe iska motion sinusoidal hota hai!` : `**${topic}** is pure SHM for small angles — the restoring torque is proportional to displacement.`, highlight: false },
+        { type: "equation", content: `$$ T = 2\pi\sqrt{\frac{L}{g}} \qquad \omega = \sqrt{\frac{g}{L}} \qquad \theta(t)=\theta_0\cos(\omega t)e^{-\beta t} $$`, highlight: true },
+        { type: "concept", content: `**CBSE/NCERT:** For small $\\theta$, $\\sin\\theta\\approx\\theta$ ⇒ $\\alpha = -(g/L)\\theta$. Period depends only on $L$ and $g$, not mass! Try dragging **Length** and **Damping** on the simulation while I speak.`, highlight: false },
+        { type: "example", content: `**Quick Calc:** $L=1.0\\,\\text{m}, g=10 ⇒ T≈ ${ (2*Math.PI*Math.sqrt(1/10)).toFixed(2)} s$. Increase $L$ → slower swing; increase damping → amplitude decays.` },
+      ],
+      svg_or_diagram: `graph TD; A[Mean Position]-->B[Displacement θ]-->C[Restoring Torque]-->D[SHM]`,
+      simulation_widget: chosenSim,
+      spoken_script: isHinglish ? `Dekho, pendulum ka period sirf length aur gravity pe depend karta hai, mass pe nahi! Slider se length badhao aur dekho swing kaise slow hota hai.` : `Notice the period depends only on length and g, not mass. Drag the length slider and watch the swing change live.`,
+      checkpoint_question: {
+        question: `A pendulum length is doubled. Period becomes?`,
+        options: ["Same", "$\\sqrt{2}$ times", "2 times", "Half"],
+        correctIndex: 1,
+        explanation: `$T\\propto\\sqrt{L}$, so $T' = \\sqrt{2}T$`,
+        hint: "T = 2π√(L/g)",
+      },
+    };
+  }
+  if (tLower.includes("ray") || tLower.includes("lens") || tLower.includes("optics")) {
+    return {
+      board_title: `${topic || "Ray Optics"} — Image Formation`,
+      board_blocks: [
+        { type: "concept", content: `**${topic || "Lens"} — Ray Diagram:** Every thin lens obeys $1/f = 1/do + 1/di$ and $m=-di/do$. Drag object distance and focal length — see image flip from real to virtual!`, highlight: false },
+        { type: "equation", content: `$$ \frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i} \qquad m=\frac{h_i}{h_o}=-\frac{d_i}{d_o} $$`, highlight: true },
+        { type: "concept", content: `**3 principal rays:** (1) Parallel → through F', (2) Through center → undeviated, (3) Through F → emerges parallel. Try switching **Convex/Concave** and watch virtual image form.` },
+        { type: "example", content: `**Example:** $f=12\\,cm$, $do=28\\,cm$ ⇒ $di=1/(1/12-1/28)≈21\\,cm$, $m≈-0.75$ (real, inverted, diminished). Now drag $do$ < $f$ → virtual, erect, magnified!` },
+      ],
+      svg_or_diagram: `graph LR; O[Object]-->L[Lens f]-->I[Image]`,
+      simulation_widget: chosenSim,
+      spoken_script: `Watch the rays — as you drag the object closer than focal length, the image jumps to the same side and becomes virtual and magnified. That's the magnifier you use!`,
+      checkpoint_question: {
+        question: `For convex lens f=10cm, object at 15cm — image?`,
+        options: ["Virtual, 30cm", "Real, 30cm", "Real, 15cm", "No image"],
+        correctIndex: 1,
+        explanation: `1/di=1/10-1/15=1/30 ⇒ di=30cm real, m=-2 inverted`,
+        hint: "Use 1/f =1/do+1/di",
+      },
+    };
+  }
+  if (tLower.includes("gas") || tLower.includes("ideal") || tLower.includes("thermo")) {
+    return {
+      board_title: `${topic || "Ideal Gas"} — PV=nRT Live`,
+      board_blocks: [
+        { type: "concept", content: `**${topic || "Ideal Gas Law"}:** $PV=nRT$ — molecules fly faster when $T$ rises (speed $\\propto\\sqrt{T}$). Piston moves as you change $P$ or $T$ — see the isotherm hyperbola shift!`, highlight: false },
+        { type: "equation", content: `$$ PV=nRT \qquad R=0.0821\\,\\frac{L\\cdot atm}{mol\\cdot K} \qquad V=\frac{nRT}{P} $$`, highlight: true },
+        { type: "concept", content: `**Interact:** Drag **T** up → particles zip faster, piston rises ($V\\uparrow$). Drag **P** up → piston compresses ($V\\downarrow$). Isotherm $P\\propto 1/V$ glides live on right graph.` },
+        { type: "example", content: `**Example:** $n=1\\,mol$, $T=300\\,K$, $P=1\\,atm$ ⇒ $V=24.6\\,L$. Double $T$→ $49.2\\,L$ at same $P$. Try it!` },
+      ],
+      svg_or_diagram: `graph LR; T[Temp ↑]-->V[Speed ↑]-->P[Collisions ↑]`,
+      simulation_widget: chosenSim,
+      spoken_script: `See the particles — hotter means faster. The P-V graph is a hyperbola; as you tweak temperature, watch the curve breathe while the piston moves.`,
+      checkpoint_question: {
+        question: `At constant n,T, if pressure doubles, volume?`,
+        options: ["Doubles", "Halves", "Quadruples", "Unchanged"],
+        correctIndex: 1,
+        explanation: `$PV=const$ ⇒ $V\\propto 1/P$`,
+        hint: "Boyle's law",
+      },
+    };
+  }
+  if (tLower.includes("equilibrium") || tLower.includes("chemical") || tLower.includes("le chat") || tLower.includes("kc")) {
+    return {
+      board_title: `${topic || "Chemical Equilibrium"} — Q vs K`,
+      board_blocks: [
+        { type: "concept", content: `**${topic || "Equilibrium"}:** $N_2+3H_2\\rightleftharpoons 2NH_3$, $Q=\\frac{[NH_3]^2}{[N_2][H_2]^3}$. If $Q<K$, forward; if $Q>K$, backward. Drag concentrations — watch beakers and $Q$ bar slide!`, highlight: false },
+        { type: "equation", content: `$$ Q=\frac{[NH_3]^2}{[N_2][H_2]^3} \qquad K_c=\frac{[NH_3]_{eq}^2}{[N_2]_{eq}[H_2]_{eq}^3} \qquad \Delta G = -RT\\ln K $$`, highlight: true },
+        { type: "concept", content: `**Le Chatelier:** Add $N_2$ → $Q\\downarrow<K$ → shifts right (more $NH_3$). Increase $T$ (exothermic) → $K\\downarrow$. Test by dragging $Kc$ and $T$ sliders live.` },
+        { type: "example", content: `**Example:** $[N_2]=1.0, [H_2]=1.5, [NH_3]=0.6 ⇒ Q=0.11$. If $Kc=0.85$, $Q<K$ → forward, makes more ammonia. Try raising $[NH_3]$ to 1.8 → Q jumps → backward.` },
+      ],
+      svg_or_diagram: `graph LR; R[Reactants]-->E[Equilibrium]-->P[Products]`,
+      simulation_widget: chosenSim,
+      spoken_script: `The beakers show concentrations. Nudge any concentration — the Q bar moves instantly. When Q crosses Kc, the shift flips — that's Le Chatelier live.`,
+      checkpoint_question: {
+        question: `For this reaction, if Q=0.1 and Kc=0.85, direction?`,
+        options: ["Forward", "Backward", "At equilibrium", "No reaction"],
+        correctIndex: 0,
+        explanation: `Q<K ⇒ forward to make more NH₃`,
+        hint: "Q<K → forward",
+      },
+    };
+  }
 
   const scripts: Record<string, any> = {
     default: {
@@ -39,7 +139,7 @@ export function mockTutorResponse(topic: string, language: string) {
   B --> D[Parabolic Trajectory]
   C --> D
   D --> E[Range R = u² sin2θ / g]`,
-      simulation_widget: { type: "projectile", params: { u: 20, theta: 45 } },
+      simulation_widget: chosenSim,
       spoken_script: isHinglish
         ? `Dekho, projectile motion ka sabse beautiful point yeh hai — horizontal aur vertical motion ek doosre se independent hote hain! Horizontal speed same rehti hai, vertical gravity se change hoti hai, aur milke ek parabola banta hai. Ab ek quick question se check karte hain ki samajh aaya ki nahi.`
         : isHindi
@@ -57,6 +157,7 @@ export function mockTutorResponse(topic: string, language: string) {
 
   return scripts.default;
 }
+
 
 export function mockQuiz(chapter: string, count: number = 5) {
   const base = [

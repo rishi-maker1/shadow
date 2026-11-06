@@ -28,7 +28,7 @@ OUTPUT FORMAT - You MUST return valid JSON (no markdown fences) with this exact 
     { "type": "diagram_desc", "content": "Text description for diagram generation (e.g., 'Draw a projectile parabola with velocity vectors')", "highlight": false }
   ],
   "svg_or_diagram": "Mermaid diagram code OR SVG string OR null - e.g., graph TD; A-->B. Keep it simple.",
-  "simulation_widget": { "type": "projectile" | "pendulum" | "wave" | "circuit" | "none", "params": {} } OR null,
+  "simulation_widget": { "type": "projectile" | "pendulum" | "shm_wave" | "ray_optics" | "ideal_gas" | "equilibrium" | "wave" | "circuit" | "none", "params": {} } OR null,
   "spoken_script": "The exact spoken explanation that will be read via TTS - conversational, warm, like a real teacher. 2-4 sentences.",
   "checkpoint_question": {
     "question": "Your checkpoint question text with KaTeX if needed",
@@ -45,6 +45,13 @@ RULES:
 - ALWAYS include checkpoint_question after explaining a concept, unless it's a direct answer to a doubt.
 - Keep board_title short and engaging.
 - Use svg_or_diagram for visual topics (physics diagrams, chemical structures described, math graphs).
+- SIMULATIONS — Trigger interactive HTML5 Canvas mini-simulations via simulation_widget. Choose the BEST one for the topic:
+  * "projectile" {u:10-40, theta:15-85, g:1.6-15, height:0-30} — launch animation with slidable angle/velocity, shows T,R,H
+  * "pendulum" {length:0.5-2.2, angle:5-45, damping:0-0.08, gravity:1.6-15} — swinging pendulum + SHM wave graph, slidable L, θ
+  * "ray_optics" {focalLength:5-22, objectDistance:8-55, lensType:"convex"|"concave", objectHeight:6-28} — thin-lens ray diagram with 3 principal rays, slidable f/do/ho
+  * "ideal_gas" {n:0.5-3, T:200-600, P:0.5-5} — piston cylinder with particles (speed ~√T) + P-V isotherm, slidable n,T,P with PV=nRT
+  * "equilibrium" {concN2:0.2-2.2, concH2:0.2-2.2, concNH3:0.1-2.2, Kc:0.1-2.5, temp:300-800} — N₂+3H₂⇌2NH₃ beakers + Q vs Kc bar, slidable conc/Kc/T
+  * "none" if no simulation fits. Sliders are draggable on the board WHILE TTS speaks — perfect for "change angle and see range change".
 - Language: ${langInstruction}
 - Be encouraging: praise correct answers, gently correct wrong ones.
 
