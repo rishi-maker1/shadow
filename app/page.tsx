@@ -12,7 +12,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const saved = getSelectedExam() as Exam;
-    if (saved && (saved === "JEE" || saved === "NEET" || saved === "CBSE10" || saved === "CBSE12")) setExam(saved);
+    if (saved && (saved === "JEE" || saved === "NEET" || saved === "CBSE10" || saved === "CBSE12" || saved === "CLASS11" || saved === "CLASS12")) setExam(saved);
   }, []);
 
   const handleExamChange = (e: Exam) => {
@@ -46,7 +46,7 @@ export default function Dashboard() {
               <h1 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight leading-none">
                 Good Evening, <span className="bg-gradient-to-r from-amber-300 to-pink-300 bg-clip-text text-transparent">Future Topper</span> 👋
               </h1>
-              <p className="mt-2 text-white/70 max-w-2xl">Your personal JEET AI teacher is ready — pick a chapter and start your live 1-on-1 classroom. No hour limits, no subscriptions.</p>
+              <p className="mt-2 text-white/70 max-w-2xl">Your personal shadow teacher is ready — pick a chapter and start your live 1-on-1 classroom. No hour limits, no subscriptions.</p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link href="/classroom" className="px-6 py-3 rounded-full bg-white text-slate-900 font-bold flex items-center gap-2 shadow-xl hover:bg-slate-100 transition">
                   <PlayCircle className="w-5 h-5 text-indigo-600" /> Start Live Classroom

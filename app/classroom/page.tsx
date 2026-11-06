@@ -296,7 +296,7 @@ function ClassroomInner() {
                   </div>
                 </div>
               ))}
-              {loading && <div className="flex justify-start"><div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 flex items-center gap-2 text-sm text-slate-600"><Loader2 className="w-4 h-4 animate-spin" /> JEET AI is preparing your board…</div></div>}
+              {loading && <div className="flex justify-start"><div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 flex items-center gap-2 text-sm text-slate-600"><Loader2 className="w-4 h-4 animate-spin" /> shadow is preparing your board…</div></div>}
               <div ref={transcriptEndRef} />
             </div>
 

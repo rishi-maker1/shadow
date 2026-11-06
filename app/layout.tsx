@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "JEET AI - Personal 1-on-1 AI Tutor | JEE • NEET • CBSE",
-  description: "Your personal live AI teacher for JEE, NEET, Foundation and CBSE Boards. Interactive board, voice, vision doubt solver, mock tests & more.",
+  title: "shadow - Personal 1-on-1 AI Tutor | JEE • NEET • CBSE",
+  description: "shadow — your personal live AI teacher for JEE, NEET, Foundation and CBSE Boards. Interactive board, voice, vision doubt solver, mock tests & more.",
   manifest: "/manifest.json",
 };
 

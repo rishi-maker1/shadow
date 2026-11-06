@@ -148,7 +148,7 @@ export default function VirtualBoard({
           </div>
           <div>
             <h2 className={`font-bold text-sm leading-none ${theme === "dark" ? "text-white" : "text-slate-900"}`}>{data.board_title}</h2>
-            <p className={`text-xs ${theme === "dark" ? "text-white/60" : "text-slate-500"}`}>Step {Math.min(renderedSteps, blocks.length)} / {blocks.length} • JEET AI Board</p>
+            <p className={`text-xs ${theme === "dark" ? "text-white/60" : "text-slate-500"}`}>Step {Math.min(renderedSteps, blocks.length)} / {blocks.length} • shadow Board</p>
           </div>
         </div>
         <div className="flex items-center gap-2">

@@ -87,7 +87,7 @@ export default function OpenSessionPage() {
             <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white"><Camera className="w-5 h-5" /></span>
             Open Session — 24×7 Doubt Solver (Photo Upload)
           </h1>
-          <p className="text-sm text-slate-600 mt-2">No need to pick a chapter. Upload a photo of any textbook/coaching question, speak or type your doubt — JEET AI extracts it, shows it on the board, and walks you through step-by-step <b>without dumping the final answer immediately</b>.</p>
+          <p className="text-sm text-slate-600 mt-2">No need to pick a chapter. Upload a photo of any textbook/coaching question, speak or type your doubt — shadow extracts it, shows it on the board, and walks you through step-by-step <b>without dumping the final answer immediately</b>.</p>
         </div>
 
         <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">

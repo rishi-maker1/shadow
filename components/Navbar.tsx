@@ -29,7 +29,7 @@ export default function Navbar() {
                 </div>
                 <div>
                   <div className="font-extrabold text-slate-900 leading-none tracking-tight flex items-center gap-1.5">
-                    JEET AI <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-400 text-amber-900">PERSONAL</span>
+                    shadow <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-900 text-white">AI TUTOR</span>
                   </div>
                   <div className="text-[11px] font-medium text-slate-500 tracking-wide">1-on-1 Live Tutor • JEE • NEET • CBSE</div>
                 </div>

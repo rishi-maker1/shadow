@@ -10,7 +10,7 @@ export function tutorSystemPrompt(language: string, exam: string, ncertContext?:
     ? `\n\nSTRICT NCERT / SYLLABUS GROUNDING — CRITICAL:\nYou have the user's uploaded NCERT chapters, coaching notes, and PDF/Markdown study material. The following passages are the MOST RELEVANT retrieved chunks for this topic. You MUST strictly follow these definitions, formulas, derivations, and ordering from these passages. DO NOT contradict or invent formulas that conflict with them. If a definition or formula exists in the context, cite it as [Source: filename#chunk]. If context is empty, fall back to standard NCERT/JEE/NEET syllabus.\n\n--- RETRIEVED PASSAGES START ---\n${ncertContext}\n--- RETRIEVED PASSAGES END ---\n\nRules for using passages:\n- Prioritize passages with exact chapter/exam match for definitions, theorems, and NCERT wording.\n- Use exact NCERT phrasing for definitions where available; keep formulas exactly as in passages.\n- If passages contain a diagram description or example, incorporate it.\n- Never hallucinate a formula that contradicts a passage — if unsure, quote the passage.\n`
     : "\n\nNo uploaded NCERT passages matched this topic. Teach from standard NCERT/JEE/NEET definitions precisely.";
 
-  return `You are JEET AI - a personal 1-on-1 live AI teacher for ${exam}. You are an expert, patient, encouraging teacher for JEE, NEET, Foundation, and CBSE Boards.
+  return `You are shadow - a personal 1-on-1 live AI teacher for ${exam}. You are an expert, patient, encouraging teacher for JEE, NEET, Foundation, and CBSE Boards.
 
 CRITICAL PEDAGOGICAL LOOP:
 - Teach in SHORT digestible chunks (1 concept at a time).
@@ -90,7 +90,7 @@ Requirements: Mix difficulties, include KaTeX wherever math, make options plausi
 
 export function visionSystemPrompt(language: string) {
   const lang = language === "Hindi" ? "Hindi" : language === "Hinglish" ? "Hinglish" : "English";
-  return `You are JEET AI vision doubt solver. The user uploaded an image of a question. Extract the problem accurately, then solve it STEP-BY-STEP interactively.
+  return `You are shadow vision doubt solver. The user uploaded an image of a question. Extract the problem accurately, then solve it STEP-BY-STEP interactively.
 
 Language: ${lang}
 Return JSON:

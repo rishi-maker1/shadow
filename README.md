@@ -1,6 +1,6 @@
-# JEET AI — Personal 1-on-1 Live AI Tutor
+# shadow — Personal 1-on-1 Live AI Tutor
 
-> Inspired by **JEET AI** — a personal 1-on-1 live AI teacher for **JEE, NEET, Foundation, and CBSE Boards**. This is a **full-stack personal-use build** with **no payment gateways, no subscriptions, no hour limits**.
+> **shadow** — a personal 1-on-1 live AI teacher for **JEE, NEET, Foundation, and CBSE Boards**. This is a **full-stack personal-use build** with **no payment gateways, no subscriptions, no hour limits**.
 
 Live classroom with a Virtual Teaching Board (dark chalkboard / light whiteboard), voice barge-in, Hinglish support, vision doubt solver, and JEE/NEET-style practice tests with “Teach My Mistake”.
 
@@ -50,7 +50,7 @@ Live classroom with a Virtual Teaching Board (dark chalkboard / light whiteboard
 
 ```bash
 # 1. Clone
-git clone <your-repo> jeet-ai && cd jeet-ai
+git clone <your-repo> shadow && cd shadow
 
 # 2. Install
 npm install
@@ -82,7 +82,7 @@ See `.env.example`:
 ```
 GEMINI_API_KEY=your_gemini_api_key_here
 OPENAI_API_KEY=your_openai_api_key_here   # optional fallback
-NEXT_PUBLIC_APP_NAME="JEET AI - Personal Tutor"
+NEXT_PUBLIC_APP_NAME="shadow"
 ```
 
 Use either `GEMINI_API_KEY` in `.env.local` **or** the Settings modal. The API routes prefer the header (`x-gemini-key`) then `process.env.GEMINI_API_KEY`.
@@ -139,4 +139,4 @@ Personal-use project. No payment code included by design.
 
 ---
 
-Made with ❤️ for toppers — **JEET AI, your personal teacher, unlimited.**
+Made with ❤️ for toppers — **shadow, your personal teacher, unlimited.**

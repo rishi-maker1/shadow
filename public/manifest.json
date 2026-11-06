@@ -1,7 +1,7 @@
 {
-  "name": "JEET AI - Personal Tutor",
-  "short_name": "JEET AI",
-  "description": "Personal 1-on-1 live AI teacher for JEE, NEET, Foundation and CBSE Boards",
+  "name": "shadow",
+  "short_name": "shadow",
+  "description": "Personal 1-on-1 live AI teacher for JEE, NEET, Foundation and CBSE Boards — now shadow",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
