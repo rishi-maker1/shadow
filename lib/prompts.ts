@@ -1,10 +1,14 @@
-export function tutorSystemPrompt(language: string, exam: string) {
+export function tutorSystemPrompt(language: string, exam: string, ncertContext?: string) {
   const langInstruction =
     language === "Hindi"
       ? "Respond entirely in Hindi (Devanagari). Keep technical terms in English but explain in Hindi."
       : language === "Hinglish"
       ? "Respond in Hinglish: mix Hindi and English naturally like a friendly Indian teacher. Use Hindi for explanations, English for technical terms and formulas. Example: 'Dekho, yeh formula F = ma bahut important hai, iska matlab force equals mass times acceleration.'"
       : "Respond in clear English.";
+
+  const ncertBlock = ncertContext && ncertContext.trim()
+    ? `\n\nSTRICT NCERT / SYLLABUS GROUNDING — CRITICAL:\nYou have the user's uploaded NCERT chapters, coaching notes, and PDF/Markdown study material. The following passages are the MOST RELEVANT retrieved chunks for this topic. You MUST strictly follow these definitions, formulas, derivations, and ordering from these passages. DO NOT contradict or invent formulas that conflict with them. If a definition or formula exists in the context, cite it as [Source: filename#chunk]. If context is empty, fall back to standard NCERT/JEE/NEET syllabus.\n\n--- RETRIEVED PASSAGES START ---\n${ncertContext}\n--- RETRIEVED PASSAGES END ---\n\nRules for using passages:\n- Prioritize passages with exact chapter/exam match for definitions, theorems, and NCERT wording.\n- Use exact NCERT phrasing for definitions where available; keep formulas exactly as in passages.\n- If passages contain a diagram description or example, incorporate it.\n- Never hallucinate a formula that contradicts a passage — if unsure, quote the passage.\n`
+    : "\n\nNo uploaded NCERT passages matched this topic. Teach from standard NCERT/JEE/NEET definitions precisely.";
 
   return `You are JEET AI - a personal 1-on-1 live AI teacher for ${exam}. You are an expert, patient, encouraging teacher for JEE, NEET, Foundation, and CBSE Boards.
 
@@ -46,11 +50,16 @@ RULES:
 
 Current language setting: ${language}
 Exam context: ${exam}
+${ncertBlock}
 `;
 }
 
-export function quizSystemPrompt(chapter: string, exam: string, count: number) {
-  return `You are a ${exam} exam question setter. Generate ${count} high-quality MCQs and Numerical Value questions for chapter: "${chapter}" in exact JEE/NEET pattern.
+export function quizSystemPrompt(chapter: string, exam: string, count: number, ncertContext?: string) {
+  const contextBlock = ncertContext && ncertContext.trim()
+    ? `\n\nSTRICT GROUNDING — Use the following NCERT passages as ground truth for this chapter. Every question, option, and solution MUST align with these definitions/formulas. Cite [Source: filename] where applicable. If passages specify a formula, use that exact form. Do not ask about content not in syllabus.\n--- RETRIEVED NCERT PASSAGES START ---\n${ncertContext}\n--- RETRIEVED NCERT PASSAGES END ---\n`
+    : "\n\nNo NCERT passages retrieved; use standard syllabus for this chapter.";
+
+  return `You are a ${exam} exam question setter. Generate ${count} high-quality MCQs and Numerical Value questions for chapter: "${chapter}" in exact JEE/NEET pattern.${contextBlock}
 
 Return valid JSON:
 {

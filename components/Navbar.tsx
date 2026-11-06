@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GraduationCap, LayoutDashboard, MessageCircle, Camera, ClipboardCheck, Settings, Sparkles } from "lucide-react";
+import { GraduationCap, LayoutDashboard, MessageCircle, Camera, ClipboardCheck, Settings, Sparkles, BookMarked } from "lucide-react";
 import { useState } from "react";
 import SettingsModal from "./SettingsModal";
 
@@ -14,6 +14,7 @@ export default function Navbar() {
     { href: "/classroom", label: "Live Classroom", icon: MessageCircle },
     { href: "/open-session", label: "Doubt Solver", icon: Camera },
     { href: "/practice", label: "Practice & Tests", icon: ClipboardCheck },
+    { href: "/materials", label: "My Study Material", icon: BookMarked },
   ];
 
   return (
