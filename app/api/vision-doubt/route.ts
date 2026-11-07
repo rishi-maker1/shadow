@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { visionSystemPrompt } from "@/lib/prompts";
-import { mockVisionResponse } from "@/lib/mock";
 
 export const runtime = "nodejs";
 
@@ -11,10 +10,7 @@ export async function POST(req: NextRequest) {
     const geminiKey = req.headers.get("x-gemini-key") || process.env.GEMINI_API_KEY || "";
 
     if (!geminiKey) {
-      await new Promise((r) => setTimeout(r, 800));
-      const mock = mockVisionResponse();
-      if (questionText) mock.extracted_problem = questionText;
-      return NextResponse.json(mock);
+      return NextResponse.json({ error: "shadow requires GEMINI_API_KEY for vision doubt solving — add it in .env or ⚙️ Settings. No demo mock." }, { status: 503 });
     }
 
     try {
@@ -49,11 +45,9 @@ export async function POST(req: NextRequest) {
       const cleaned = text.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/```$/i, "").trim();
       const parsed = JSON.parse(cleaned);
       return NextResponse.json(parsed);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Vision Gemini failed", err);
-      const mock = mockVisionResponse();
-      if (questionText) mock.extracted_problem = questionText;
-      return NextResponse.json(mock);
+      return NextResponse.json({ error: `Vision failed: ${err.message || err} — check GEMINI_API_KEY` }, { status: 502 });
     }
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });

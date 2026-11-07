@@ -16,11 +16,11 @@ function LiveBanner() {
   if (!checked) return null;
   return (
     <div className="max-w-[1600px] w-full mx-auto px-3 sm:px-4 lg:px-6 pt-4">
-      <div className={`flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-xl border text-xs sm:text-sm ${hasKey ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-amber-50 border-amber-200 text-amber-900"}`}>
+      <div className={`flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-xl border text-xs sm:text-sm ${hasKey ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-slate-900 text-white border-slate-800"}`}>
         <span className="flex items-center gap-2 font-semibold">
-          {hasKey ? <><Zap className="w-4 h-4 text-emerald-600" /> LIVE AI — Gemini connected. Board, voice & questions are generated live for your topic (not pre-recorded).</> : <><Sparkles className="w-4 h-4 text-amber-600" /> DEMO MOCK — No API key. You’re seeing mock board (same 5 templates). Add GEMINI_API_KEY to go fully live.</>}
+          {hasKey ? <><Zap className="w-4 h-4 text-emerald-500" /> shadow LIVE — Gemini connected. Every board is generated live for your topic.</> : <><Zap className="w-4 h-4 text-amber-400" /> shadow requires GEMINI_API_KEY — add it in .env or ⚙️ Settings for live teaching (no demo, exact JEET AI flow).</>}
         </span>
-        {!hasKey && <span className="text-amber-800">Add key in <code className="px-1 py-0.5 bg-white border rounded">.env</code> or <span className="px-2 py-0.5 rounded-full bg-slate-900 text-white font-bold">⚙️ Settings</span></span>}
+        {!hasKey && <span className="text-white/80">Get key: <a href="https://aistudio.google.com/app/apikey" target="_blank" className="underline">aistudio.google.com/app/apikey</a></span>}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tutorSystemPrompt } from "@/lib/prompts";
-import { mockTutorResponse } from "@/lib/mock";
 import { retrieveRelevantChunks, formatChunksForPrompt } from "@/lib/materials";
 
 export const runtime = "nodejs";
@@ -24,38 +23,9 @@ export async function POST(req: NextRequest) {
       console.error("retrieval failed", e);
     }
 
-    // If no API key, return mock immediately (but now NCERT-grounded mock)
+    // shadow — LIVE ONLY (no demo fallback as per user request). Require Gemini key for true JEET AI duplicate.
     if (!geminiKey && !apiKey) {
-      await new Promise((r) => setTimeout(r, 600));
-      const mock = mockTutorResponse(topic || chapter || userMessage || "Projectile Motion", language);
-      // Inject NCERT context into mock if available
-      if (ncertContext) {
-        const sourceList = retrievedChunks.map((c: any, i: number) => `**[Source ${i + 1}: ${c.materialFilename} — ${c.chapter}]**`).join(", ");
-        mock.board_blocks.unshift({
-          type: "concept",
-          content: `**📚 NCERT Grounded:** This explanation follows your uploaded notes ${sourceList}. Definitions & formulas below are taken verbatim from your material.`,
-          highlight: false,
-        });
-        // Append a citation block at end
-        const citationText = retrievedChunks.slice(0, 2).map((c: any) => `> _“${c.text.slice(0, 220).replace(/\n/g, " ")}…”_ — [${c.materialFilename}#chunk-${c.index}]`).join("\n\n");
-        mock.board_blocks.push({
-          type: "concept",
-          content: `**NCERT Passages Used:**\n\n${citationText}`,
-          highlight: false,
-        });
-        mock.board_title = `📚 ${mock.board_title}`;
-        mock.spoken_script = `As per your NCERT notes, ` + mock.spoken_script;
-      }
-      // Personalize with user message context if provided
-      if (userMessage) {
-        const lower = userMessage.toLowerCase();
-        if (lower.includes("simpler") || lower.includes("explain differently") || lower.includes("easy")) {
-          mock.board_blocks[0].content = `**Simpler Analogy:** Soch lo ek auto rickshaw jo samandar kinare chal raha hai — horizontal speed steady hai, par gravity use neeche kheench rahi hai. ${mock.board_blocks[0].content}`;
-          mock.spoken_script = `Okay, let me make it super simple — think of an auto moving steadily forward while gravity gently pulls it down. That's exactly why the path curves into a parabola!`;
-          mock.board_title = "Simpler Take: " + mock.board_title;
-        }
-      }
-      return NextResponse.json({ ...mock, _ncertContext: ncertContext ? { count: retrievedChunks.length, sources: retrievedChunks.map((c: any) => c.sourceLabel) } : null, _retrieved: retrievedChunks.slice(0, 2) });
+      return NextResponse.json({ error: "shadow requires GEMINI_API_KEY — add it in .env (GEMINI_API_KEY=...) or via ⚙️ Settings on the app. No demo/mocks — this is a live JEET AI duplicate." }, { status: 503 });
     }
 
     // Try Gemini API
@@ -111,10 +81,7 @@ export async function POST(req: NextRequest) {
           parsed = JSON.parse(cleaned);
         } catch (e) {
           console.error("JSON parse failed, raw:", text);
-          const mock = mockTutorResponse(topic || chapter || "Topic", language);
-          mock.spoken_script = text.slice(0, 400);
-          mock.board_blocks[0].content = text.slice(0, 800);
-          return NextResponse.json({ ...mock, _ncertContext: ncertContext ? { count: retrievedChunks.length } : null });
+          return NextResponse.json({ error: "Gemini returned invalid JSON — retry. Raw: " + text.slice(0, 800) }, { status: 502 });
         }
 
         if (!parsed.board_title) parsed.board_title = topic || "Lesson";
@@ -128,16 +95,12 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(parsed);
       } catch (err: any) {
-        console.error("Gemini call failed, falling back to mock", err);
-        const mock = mockTutorResponse(topic || chapter || userMessage || "Topic", language);
-        if (ncertContext) {
-          mock.board_blocks.unshift({ type: "concept", content: `**📚 NCERT Grounded:** Using your uploaded notes for this topic.` });
-        }
-        return NextResponse.json(mock);
+        console.error("Gemini call failed", err);
+        return NextResponse.json({ error: `Gemini failed: ${err.message || err} — check your GEMINI_API_KEY and quota at aistudio.google.com/app/apikey` }, { status: 502 });
       }
     }
 
-    return NextResponse.json(mockTutorResponse(topic || chapter || userMessage || "Topic", language));
+return NextResponse.json({ error: "No Gemini key and no fallback — shadow is live-only" }, { status: 503 });
   } catch (e: any) {
     console.error(e);
     return NextResponse.json({ error: e.message || "Internal error" }, { status: 500 });

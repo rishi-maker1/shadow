@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import { SYLLABUS, EXAM_META, Exam } from "@/lib/syllabus";
 import { getSelectedExam, setSelectedExam, getProgress, saveProgress, getApiKeys } from "@/lib/storage";
 import Link from "next/link";
-import { ChevronRight, BookOpen, Trophy, Target, Clock, Flame, ArrowRight, PlayCircle, BarChart3, Brain, CheckCircle2, AlertTriangle, Circle, Search, Filter, Sparkles, RotateCcw, Zap } from "lucide-react";
+import { ChevronRight, BookOpen, Trophy, Target, Clock, Flame, ArrowRight, PlayCircle, BarChart3, Brain, CheckCircle2, AlertTriangle, Circle, Search, RotateCcw, Zap } from "lucide-react";
 
 export default function Dashboard() {
   const [exam, setExam] = useState<Exam>("JEE");
@@ -16,7 +16,6 @@ export default function Dashboard() {
   useEffect(() => {
     const saved = getSelectedExam() as Exam;
     if (saved && (saved === "JEE" || saved === "NEET" || saved === "CBSE10" || saved === "CBSE12" || saved === "CLASS11" || saved === "CLASS12")) setExam(saved);
-    // check live key (Settings modal or env - we can only check localStorage here)
     try {
       const k = getApiKeys();
       setHasKey(!!(k.gemini && k.gemini.length > 10));
@@ -25,7 +24,8 @@ export default function Dashboard() {
     try {
       const p = getProgress();
       if (p) setUserProgress({ completed: p.completed || [], inProgress: p.inProgress || [], weak: p.weak || [] });
-    } catch {}
+      else setUserProgress({ completed: [], inProgress: [], weak: [] });
+    } catch { setUserProgress({ completed: [], inProgress: [], weak: [] }); }
   }, []);
 
   const handleExamChange = (e: Exam) => {
@@ -33,25 +33,19 @@ export default function Dashboard() {
     setSelectedExam(e);
   };
 
-  // merge syllabus statuses with user progress (localStorage overrides seed for true live tracking)
-  function effectiveStatus(id: string, seed: string): string {
-    if (!userProgress) return seed;
+  function statusFor(id: string): "completed" | "in-progress" | "weak" | "not-started" {
+    if (!userProgress) return "not-started";
     if (userProgress.completed.includes(id)) return "completed";
     if (userProgress.weak.includes(id)) return "weak";
     if (userProgress.inProgress.includes(id)) return "in-progress";
-    // if user has ANY progress saved, treat seed-only items as not-started for clean fresh feel
-    // uncomment next line to make dashboard start at 0% after first interaction:
-    // return "not-started";
-    return seed;
+    return "not-started";
   }
 
-  const subjectsRaw = SYLLABUS[exam];
-  // build effective subjects/chapters with live statuses
-  const subjects = subjectsRaw.map((subj) => ({
+  const subjects = SYLLABUS[exam].map((subj) => ({
     ...subj,
     chapters: subj.chapters.map((ch) => ({
       ...ch,
-      subtopics: ch.subtopics.map((st) => ({ ...st, status: effectiveStatus(st.id, st.status) as any })),
+      subtopics: ch.subtopics.map((st) => ({ ...st, status: statusFor(st.id) as any })),
     })),
   }));
   const allChapters = subjects.flatMap((s) => s.chapters);
@@ -61,31 +55,24 @@ export default function Dashboard() {
   const weak = allSubtopics.filter((s) => s.status === "weak").length;
   const total = allSubtopics.length;
   const progressPct = total ? Math.round((completed / total) * 100) : 0;
-  const isDemoSeed = !userProgress; // no user progress yet -> showing seeded demo (17% etc)
 
-  const handleResetFresh = () => {
-    if (!confirm("Start fresh? This will reset all progress to 0% (not-started) for this browser. You can still see the syllabus structure.")) return;
+  const handleReset = () => {
+    if (!confirm("Reset all progress to 0%? This clears local progress for this browser.")) return;
     const fresh = { completed: [], inProgress: [], weak: [], exam };
     saveProgress(fresh as any);
     setUserProgress({ completed: [], inProgress: [], weak: [] });
-  };
-  const handleLoadDemo = () => {
-    localStorage.removeItem("shadow_progress_v1");
-    localStorage.removeItem("jeet_progress_v1");
-    setUserProgress(null);
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
       <Navbar />
-      {/* Live vs Demo indicator — fixes "everything is pre recorded" confusion */}
       {liveChecked && (
-        <div className={`mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 pt-4`}>
-          <div className={`flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-xl border text-xs sm:text-sm ${hasKey ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-amber-50 border-amber-200 text-amber-900"}`}>
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 pt-4">
+          <div className={`flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-xl border text-xs sm:text-sm ${hasKey ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-slate-900 text-white border-slate-800"}`}>
             <span className="flex items-center gap-2 font-semibold">
-              {hasKey ? <><Zap className="w-4 h-4 text-emerald-600" /> LIVE AI MODE — Gemini connected. Every Live Classroom & quiz is freshly generated (not pre-recorded).</> : <><Sparkles className="w-4 h-4 text-amber-600" /> DEMO MOCK MODE — No API key found. Lessons/quizzes use high-quality mocks (look pre-recorded). Add your key to go FULL LIVE.</>}
+              {hasKey ? <><Zap className="w-4 h-4 text-emerald-500" /> shadow LIVE — Gemini connected. Every lesson is generated live for you.</> : <><Zap className="w-4 h-4 text-amber-400" /> shadow — Live Tutor • Add your Gemini key in .env or ⚙️ Settings to enable full internet.</>}
             </span>
-            {!hasKey && <span className="flex items-center gap-2">Set <code className="px-1.5 py-0.5 bg-white border rounded font-mono">GEMINI_API_KEY</code> in <code className="px-1.5 py-0.5 bg-white border rounded">.env</code> + restart, or click <span className="px-2 py-1 rounded-full bg-slate-900 text-white font-bold">⚙️ Settings</span> → paste key.</span>}
+            {!hasKey && <span className="text-white/80">Get key: <a href="https://aistudio.google.com/app/apikey" target="_blank" className="underline">aistudio.google.com/app/apikey</a></span>}
           </div>
         </div>
       )}
@@ -96,7 +83,7 @@ export default function Dashboard() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold backdrop-blur">
-                <Flame className="w-3.5 h-3.5 text-amber-400" /> 7 day streak • Keep it up!
+                <Flame className="w-3.5 h-3.5 text-amber-400" /> shadow • 1-on-1 Live
                 <span className="w-px h-4 bg-white/20" />
                 <span className="text-white/80">Personal • Unlimited • No Payment</span>
               </div>
@@ -155,30 +142,20 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Progress Tracker — now LIVE (localStorage) not pre-recorded seed */}
+        {/* Progress Tracker — PURE LIVE, no demo seed */}
         <div className="mt-8 grid lg:grid-cols-3 gap-4 sm:gap-6">
           <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="font-bold text-slate-900 flex items-center gap-2"><BarChart3 className="w-5 h-5 text-indigo-600" /> Syllabus Progress — {EXAM_META[exam].label}</h3>
               <div className="flex items-center gap-2">
-                {isDemoSeed && <span className="text-[11px] font-bold px-2 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Demo seed • 17% example</span>}
-                {!isDemoSeed && <span className="text-[11px] font-bold px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Your live progress</span>}
+                <span className="text-[11px] font-bold px-2 py-1 rounded-full bg-slate-900 text-white">shadow live</span>
                 <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">{progressPct}% Completed</span>
               </div>
             </div>
-            {isDemoSeed && (
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-slate-500">This 17% / 8 weak is <b>seed demo data</b> so the UI isn’t empty — not pre-recorded videos. Your real progress is tracked live as you learn/test.</span>
-                <button onClick={handleResetFresh} className="ml-auto px-3 py-1.5 rounded-full bg-slate-900 text-white font-bold flex items-center gap-1.5 hover:bg-black"><RotateCcw className="w-3.5 h-3.5" /> Start Fresh (0%)</button>
-              </div>
-            )}
-            {!isDemoSeed && (
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-slate-500">{completed === 0 ? "Fresh start — 0% — go to Live Classroom and your progress will grow live." : "Live tracking from your lessons & tests (localStorage). 100% live, not pre-recorded."}</span>
-                <button onClick={handleLoadDemo} className="ml-auto px-3 py-1.5 rounded-full border border-slate-200 bg-white font-semibold flex items-center gap-1.5 hover:bg-slate-50"><RotateCcw className="w-3.5 h-3.5" /> Show Demo Again</button>
-                <button onClick={handleResetFresh} className="px-3 py-1.5 rounded-full bg-slate-900 text-white font-bold flex items-center gap-1.5 hover:bg-black">Reset 0%</button>
-              </div>
-            )}
+            <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+              <span>{completed === 0 && inProgress === 0 && weak === 0 ? "Fresh start — 0% — your live progress will grow as you learn. No pre-filled demo." : "Live tracking from your lessons & tests (localStorage). 100% your data."}</span>
+              {(completed > 0 || inProgress > 0 || weak > 0) && <button onClick={handleReset} className="ml-auto px-3 py-1.5 rounded-full bg-slate-900 text-white font-bold flex items-center gap-1.5 hover:bg-black text-xs"><RotateCcw className="w-3.5 h-3.5" /> Reset 0%</button>}
+            </div>
             <div className="mt-4 w-full h-3 bg-slate-100 rounded-full overflow-hidden flex">
               <div className="h-full bg-emerald-500" style={{ width: `${(completed / total) * 100}%` }} />
               <div className="h-full bg-amber-500" style={{ width: `${(inProgress / total) * 100}%` }} />
@@ -214,7 +191,7 @@ export default function Dashboard() {
           <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-2xl p-6 text-white relative overflow-hidden">
             <div className="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
             <h3 className="font-bold flex items-center gap-2 relative"><Flame className="w-5 h-5 text-amber-300" /> Weak Concepts Spotlight</h3>
-            <p className="text-sm text-white/80 mt-2 relative">Focus on these to boost your score fastest.</p>
+            <p className="text-sm text-white/80 mt-2 relative">Focus on these to boost your score fastest — live, not pre-recorded.</p>
             <div className="mt-4 space-y-2.5 relative">
               {allSubtopics.filter((s) => s.status === "weak").slice(0, 4).map((w) => (
                 <div key={w.id} className="p-3 rounded-xl bg-white/10 border border-white/15 backdrop-blur flex items-center gap-3">
@@ -223,7 +200,7 @@ export default function Dashboard() {
                   <Link href={`/classroom?topic=${encodeURIComponent(w.name)}`} className="ml-auto text-xs px-2.5 py-1 rounded-full bg-white text-indigo-700 font-bold hover:bg-amber-50">Fix →</Link>
                 </div>
               ))}
-              {weak === 0 && <p className="text-sm text-white/70">No weak concepts — amazing!</p>}
+              {weak === 0 && <p className="text-sm text-white/70">No weak concepts yet — start learning live and they will appear here.</p>}
             </div>
             <Link href="/practice" className="mt-5 inline-flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-full bg-white text-indigo-700 hover:bg-amber-50 relative">
               Practice Weak Topics <ArrowRight className="w-4 h-4" />
@@ -297,8 +274,8 @@ export default function Dashboard() {
 
         <div className="mt-8 p-6 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h4 className="font-bold text-amber-900">💡 Personal Use — No limits, no paywall</h4>
-            <p className="text-sm text-amber-800/80">All your progress, transcripts, and mistakes are saved locally in your browser (localStorage + JSON). No server, no subscription.</p>
+            <h4 className="font-bold text-amber-900">💡 shadow — No limits, no paywall, no demo</h4>
+            <p className="text-sm text-amber-800/80">Exact duplicate of JEET AI flow — 1-on-1 live teaching, voice, vision, unlimited practice. All progress is yours, stored locally.</p>
           </div>
           <Link href="/classroom" className="px-6 py-3 rounded-full bg-amber-500 text-white font-bold shadow hover:bg-amber-600 whitespace-nowrap">Enter Classroom →</Link>
         </div>

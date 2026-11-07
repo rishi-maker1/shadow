@@ -9,9 +9,9 @@ Live classroom with a Virtual Teaching Board (dark chalkboard / light whiteboard
 ## ✨ Features
 
 ### 1. Dashboard & Syllabus Course Tree
-- Exam selector: **JEE (PCM), NEET (PCB), CBSE 10 & 12**
-- Pre-populated realistic chapters & subtopics for Physics / Chemistry / Maths / Biology
-- Progress tracker — Completed / In-Progress / Weak per chapter (locally persisted)
+- Exam selector: **JEE (Full 11+12), NEET (Full 11+12), CLASS11, CLASS12, CBSE 10 & 12** — full NCERT chapters (Physics/Chem/Bio/Maths)
+- Pre-populated realistic chapters & subtopics for Physics / Chemistry / Maths / Biology (32+29 chapters for 11/12)
+- Progress tracker — Completed / In-Progress / Weak per chapter (locally persisted, starts at 0% fresh — no demo seed)
 
 ### 2. Live 1-on-1 Interactive Classroom (Active Teaching Mode)
 - **Split-screen:** Left = Virtual Teaching Board, Right = Live Conversation & Controls
@@ -46,32 +46,32 @@ Live classroom with a Virtual Teaching Board (dark chalkboard / light whiteboard
 
 ---
 
-## 🚀 Local Setup
+## 🚀 Local Setup — Perfect Project Script (Live-only, no demo)
 
-```bash
-# 1. Clone
-git clone <your-repo> shadow && cd shadow
-
-# 2. Install
-npm install
-
-# 3. Env
-cp .env.example .env.local
-# Edit .env.local — add your Gemini key:
-# GEMINI_API_KEY=your_key_here
-# Get one at https://aistudio.google.com/app/apikey
-
-# 4. Run (binds to 0.0.0.0 for Live Preview)
-npm run dev
-# → http://localhost:3000  (or preview host in Arena)
-
-# 5. Build
-npm run build && npm start
+**Windows PowerShell (one-click):**
+```powershell
+# ZIP (no git needed):
+Expand-Archive -Path shadow-arena-ca8145b2-shadow.zip -DestinationPath C:\Users\ASUS\Downloads -Force
+cd "C:\Users\ASUS\Downloads\shadow-arena-ca8145b2-shadow\shadow-arena-ca8145b2-shadow"
+powershell -ExecutionPolicy Bypass -File setup.ps1
+# -> prompts for GEMINI_API_KEY, does npm.cmd install + build, offers run
 ```
 
-No API key? The app **falls back to high-quality mock lessons/quizzes** so you can demo everything offline.
+**Linux / macOS / Git Bash:**
+```bash
+chmod +x setup.sh && ./setup.sh
+# or manual:
+git clone <your-repo> shadow && cd shadow
+cp .env.example .env
+# Edit .env — add GEMINI_API_KEY=AIza...  (https://aistudio.google.com/app/apikey)
+npm install
+npm run build
+npm run dev
+# -> http://localhost:3000
+```
 
-**In-app key:** Open the ⚙️ Settings modal (top-right) and paste your `GEMINI_API_KEY` — it’s stored in `localStorage` only and sent as `x-gemini-key` header, so Live Preview works without restarting the server.
+**Perfect duplicate:** This is a **live-only** duplicate of JEET AI — **no demo/mocks**. Without `GEMINI_API_KEY` (in `.env` or via `⚙️ Settings` modal), APIs return `503` (not mock). `setup.ps1` / `setup.sh` remember ALL changes (Class 11/12 expansion, unlimited practice, shadow branding, NCERT grounding) and recreate the perfect project.
+**In-app key:** Open ⚙️ Settings (top-right) and paste `GEMINI_API_KEY` — stored in `localStorage` (`shadow_api_keys_v1`) and sent as `x-gemini-key` header.
 
 ---
 
@@ -101,11 +101,12 @@ app/
 components/
   Navbar.tsx, VirtualBoard.tsx, SettingsModal.tsx
 lib/
-  syllabus.ts  # realistic JEE/NEET/CBSE data
-  storage.ts   # localStorage helpers
-  prompts.ts   # system prompts enforcing board JSON + pedagogy
-  mock.ts      # fallback mock responses
+  syllabus.ts  # realistic JEE/NEET/CLASS11/CLASS12/CBSE (32+29 ch, all not-started fresh)
+  storage.ts   # localStorage helpers (shadow_* keys)
+  prompts.ts   # system prompts enforcing board JSON + pedagogy (shadow)
+  mock.ts      # deprecated — live-only now, not used
 public/manifest.json
+setup.ps1 / setup.sh  # perfect project scripts (one-click JEET AI → shadow)
 ```
 
 ---

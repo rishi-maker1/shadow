@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { quizSystemPrompt } from "@/lib/prompts";
-import { mockQuiz } from "@/lib/mock";
 import { retrieveRelevantChunks, formatChunksForPrompt } from "@/lib/materials";
 
 export const runtime = "nodejs";
@@ -20,17 +19,7 @@ export async function POST(req: NextRequest) {
     } catch {}
 
     if (!geminiKey) {
-      await new Promise((r) => setTimeout(r, 700));
-      const mock = mockQuiz(chapter, count);
-      // If we have NCERT context, annotate solutions to show grounding
-      if (ncertContext && mock.questions.length) {
-        mock.questions = mock.questions.map((q: any) => ({
-          ...q,
-          explanation: q.explanation + ` [Grounded in your notes: ${retrieved.slice(0,1).map((c:any)=>c.materialFilename).join(", ") || chapter}]`,
-        }));
-        (mock as any)._ncertContext = { count: retrieved.length, sources: retrieved.map((c: any) => c.sourceLabel) };
-      }
-      return NextResponse.json(mock);
+      return NextResponse.json({ error: "shadow requires GEMINI_API_KEY for live quiz generation — add it in .env or ⚙️ Settings. No demo mocks (per user request)." }, { status: 503 });
     }
 
     try {
@@ -53,19 +42,11 @@ export async function POST(req: NextRequest) {
       try { parsed = JSON.parse(cleaned); } catch { throw new Error("Invalid JSON - likely token limit; try fewer questions (≤30) or retry"); }
       if (!parsed.questions || !Array.isArray(parsed.questions)) throw new Error("Invalid questions");
       if (retrieved.length) (parsed as any)._ncertSources = retrieved.map((c: any) => c.sourceLabel);
-      // If Gemini returned fewer than requested, pad with mock to reach count (keeps UI happy)
-      if (parsed.questions.length < count) {
-        const need = count - parsed.questions.length;
-        const filler = mockQuiz(chapter, need).questions.slice(0, need).map((q: any, i: number) => ({ ...q, id: `q${parsed.questions.length + i + 1}` }));
-        parsed.questions = parsed.questions.concat(filler);
-        (parsed as any)._filled = need;
-      }
+      // no mock filler — return exactly what Gemini gave (live only)
       return NextResponse.json(parsed);
-    } catch (err) {
-      console.error("Quiz Gemini failed, mock fallback", err);
-      const mock = mockQuiz(chapter, count);
-      if (ncertContext) (mock as any)._ncertSources = retrieved.map((c: any) => c.sourceLabel);
-      return NextResponse.json(mock);
+    } catch (err: any) {
+      console.error("Quiz Gemini failed", err);
+      return NextResponse.json({ error: `Quiz generation failed: ${err.message || err} — check GEMINI_API_KEY` }, { status: 502 });
     }
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
